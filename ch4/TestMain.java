@@ -9,5 +9,11 @@ class TestMain
         int age = test.age;
         System.out.println("the age is: " + age );
 
+
+        TestInvokeMethod test2 = new TestInvokeMethod();
+        String sos  = test2.call();
+        System.out.println("sos is: " + sos );
+
+
     }
 }
