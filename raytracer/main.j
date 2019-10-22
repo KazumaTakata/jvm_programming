@@ -20,20 +20,14 @@
 
  
 
- ;Write to file 
- new java/io/PrintWriter 
- dup
- ldc "sample.txt"
- ldc "UTF-8"
- invokespecial java/io/PrintWriter/<init> (Ljava/lang/String;Ljava/lang/String;)V 
- dup
- ldc "helloooooooooo fucker"
- invokevirtual java/io/PrintWriter/println (Ljava/lang/String;)V
- invokevirtual java/io/PrintWriter/close ()V
 
- 
+ new writeToFile
+ dup 
+ sipush 300
+ sipush 100
+ invokespecial writeToFile/<init> (II)V
 
-
+ invokevirtual writeToFile/write ()V
 
  return
 .end method
