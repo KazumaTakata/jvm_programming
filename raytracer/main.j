@@ -17,6 +17,24 @@
  invokevirtual java/lang/String/concat (Ljava/lang/String;)Ljava/lang/String;
 
  invokevirtual java/io/PrintStream/println (Ljava/lang/String;)V
+
+ 
+
+ ;Write to file 
+ new java/io/PrintWriter 
+ dup
+ ldc "sample.txt"
+ ldc "UTF-8"
+ invokespecial java/io/PrintWriter/<init> (Ljava/lang/String;Ljava/lang/String;)V 
+ dup
+ ldc "helloooooooooo fucker"
+ invokevirtual java/io/PrintWriter/println (Ljava/lang/String;)V
+ invokevirtual java/io/PrintWriter/close ()V
+
+ 
+
+
+
  return
 .end method
 .end class

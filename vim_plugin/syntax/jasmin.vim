@@ -3,6 +3,9 @@ if exists("b:current_syntax")
 endif
 
 
+syntax match jasminComment "\v;(\a|\s)+\n"
+highlight link jasminComment Comment
+
 syntax keyword jasminKeyword public 
 syntax match  jasminKeyword "\v\.(class|end|super|method|catch|field|implements|interface|limit|line|source|throws|var)"
 highlight link jasminKeyword  Type 
