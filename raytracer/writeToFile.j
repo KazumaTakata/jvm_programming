@@ -1,26 +1,33 @@
-.class public writeToFile 
+.class public Renderer 
 .super java/lang/Object
 
+.field camera LCamera;
 .field height I
 .field width I
 
-.method <init>(II)V
+.method <init> (LCamera;II)V
 aload_0
 invokespecial java/lang/Object/<init>()V
 
 aload_0
-iload_1
-putfield writeToFile/width I 
+aload_1
+putfield Renderer/camera LCamera; 
+
 
 
 aload_0
 iload_2
-putfield writeToFile/height I 
+putfield Renderer/width I 
+
+
+aload_0
+iload_3
+putfield Renderer/height I 
 
 return 
 .end method
 
-.method write()V 
+.method render()V 
 
  ;Write to file 
 new java/io/PrintWriter 
@@ -34,7 +41,7 @@ invokevirtual java/io/PrintWriter/println (Ljava/lang/String;)V
 
 dup
 aload_0
-getfield writeToFile/width I
+getfield Renderer/width I
 invokestatic java/lang/String/valueOf (I)Ljava/lang/String;
 invokevirtual java/io/PrintWriter/print (Ljava/lang/String;)V
 
@@ -45,7 +52,7 @@ invokevirtual java/io/PrintWriter/print (Ljava/lang/String;)V
 
 dup
 aload_0
-getfield writeToFile/height I
+getfield Renderer/height I
 invokestatic java/lang/String/valueOf (I)Ljava/lang/String;
 invokevirtual java/io/PrintWriter/println (Ljava/lang/String;)V
 
@@ -57,7 +64,7 @@ invokevirtual java/io/PrintWriter/println (Ljava/lang/String;)V
 ;var j col in 10
 ;var i row in 11
 aload_0 
-getfield writeToFile/height I
+getfield Renderer/height I
 istore 10 
 
 bipush 0
@@ -73,7 +80,7 @@ colLoop:
 rowLoop:
     iload 11
     aload_0
-    getfield writeToFile/width I
+    getfield Renderer/width I
     if_icmpge rowBreak
 
     ;main loop
@@ -81,7 +88,7 @@ rowLoop:
     iload 11
     i2d
     aload_0 
-    getfield writeToFile/width I
+    getfield Renderer/width I
     i2d
     ddiv
     ldc2_w 255.99D
@@ -99,7 +106,7 @@ rowLoop:
     iload 10
     i2d
     aload_0 
-    getfield writeToFile/height I
+    getfield Renderer/height I
     i2d
     ddiv
     ldc2_w 255.99D

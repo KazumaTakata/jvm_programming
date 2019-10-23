@@ -1,8 +1,10 @@
 #! /bin/bash
 
-oolong main.j
-oolong writeToFile.j
-oolong vec3.j
+oolong -g  main.j
+oolong -g writeToFile.j
+oolong -g vec3.j
+oolong -g ray.j
+oolong -g camera.j
 java -cp ./class/  Main
 
 

@@ -28,6 +28,32 @@ return
 
 .end method
 
+.method scalaMul(D)Lvec3;
+
+new vec3
+dup
+
+aload_0
+getfield vec3/x D 
+dload_1 
+dmul
+
+aload_0
+getfield vec3/y D 
+dload_1 
+dmul
+
+aload_0
+getfield vec3/z D 
+dload_1 
+dmul
+
+
+invokespecial vec3/<init> (DDD)V
+
+areturn   
+
+.end method
 
 .method add(Lvec3;)Lvec3;
 

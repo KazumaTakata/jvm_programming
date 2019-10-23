@@ -1,36 +1,53 @@
 .class public Main 
 .super java/lang/Object
 .method public static main([Ljava/lang/String;)V
+
+ new Renderer
+ dup 
  
+ new Camera 
+ dup
 
  new vec3 
  dup
- ldc2_w 1.4
+ ldc2_w -2.0 
+ ldc2_w  -1.0
+ ldc2_w -1.0
+ invokespecial vec3/<init> (DDD)V   
+
+ new vec3 
+ dup
  ldc2_w 4.0
- ldc2_w 5.0
+ ldc2_w 0.0
+ ldc2_w 0.0
  invokespecial vec3/<init> (DDD)V   
+
 
  new vec3 
  dup
- ldc2_w 1.1
- ldc2_w 4.4
- ldc2_w 53.3
+ ldc2_w 0.0 
+ ldc2_w 2.0
+ ldc2_w 0.0
  invokespecial vec3/<init> (DDD)V   
 
- invokevirtual vec3/add (Lvec3;)Lvec3;
 
- dup 
- invokevirtual vec3/print ()V 
+ new vec3 
+ dup
+ ldc2_w 0.0 
+ ldc2_w 0.0
+ ldc2_w 0.0
+ invokespecial vec3/<init> (DDD)V   
+
+ invokespecial Camera/<init> (Lvec3;Lvec3;Lvec3;Lvec3;)V
  
  
 
- new writeToFile
- dup 
+ 
  sipush 200
  sipush 100
- invokespecial writeToFile/<init> (II)V
+ invokespecial Renderer/<init> (LCamera;II)V
 
- invokevirtual writeToFile/write ()V
+ invokevirtual Renderer/render ()V
 
  return
 .end method
