@@ -29,12 +29,12 @@ ldc "sample.ppm"
 invokespecial java/io/PrintWriter/<init> (Ljava/lang/String;)V 
  
 dup
-ldc "P3 "
-invokevirtual java/io/PrintWriter/print (Ljava/lang/String;)V
+ldc "P3"
+invokevirtual java/io/PrintWriter/println (Ljava/lang/String;)V
 
 dup
 aload_0
-getfield writeToFile/height I
+getfield writeToFile/width I
 invokestatic java/lang/String/valueOf (I)Ljava/lang/String;
 invokevirtual java/io/PrintWriter/print (Ljava/lang/String;)V
 
@@ -45,9 +45,14 @@ invokevirtual java/io/PrintWriter/print (Ljava/lang/String;)V
 
 dup
 aload_0
-getfield writeToFile/width I
+getfield writeToFile/height I
 invokestatic java/lang/String/valueOf (I)Ljava/lang/String;
-invokevirtual java/io/PrintWriter/print (Ljava/lang/String;)V
+invokevirtual java/io/PrintWriter/println (Ljava/lang/String;)V
+
+dup
+ldc "255"
+invokevirtual java/io/PrintWriter/println (Ljava/lang/String;)V
+
 
 ;var j col in 10
 ;var i row in 11
@@ -74,6 +79,47 @@ rowLoop:
     ;main loop
     dup    
     iload 11
+    i2d
+    aload_0 
+    getfield writeToFile/width I
+    i2d
+    ddiv
+    ldc2_w 255.99D
+    dmul
+    d2i
+    invokestatic java/lang/String/valueOf (I)Ljava/lang/String;
+    invokevirtual java/io/PrintWriter/print (Ljava/lang/String;)V
+
+    dup
+    ldc " "
+    invokevirtual java/io/PrintWriter/print (Ljava/lang/String;)V
+
+
+    dup    
+    iload 10
+    i2d
+    aload_0 
+    getfield writeToFile/height I
+    i2d
+    ddiv
+    ldc2_w 255.99D
+    dmul
+    d2i
+    invokestatic java/lang/String/valueOf (I)Ljava/lang/String;
+    invokevirtual java/io/PrintWriter/print (Ljava/lang/String;)V
+
+
+
+    dup
+    ldc " "
+    invokevirtual java/io/PrintWriter/print (Ljava/lang/String;)V
+
+
+    dup    
+    ldc2_w 0.2D
+    ldc2_w 255.99D
+    dmul
+    d2i
     invokestatic java/lang/String/valueOf (I)Ljava/lang/String;
     invokevirtual java/io/PrintWriter/println (Ljava/lang/String;)V
 

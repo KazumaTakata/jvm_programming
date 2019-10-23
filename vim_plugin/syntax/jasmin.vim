@@ -3,7 +3,7 @@ if exists("b:current_syntax")
 endif
 
 
-syntax match jasminComment "\v;(\a|\s)+\n"
+syntax match jasminComment "\v;(\a|\s|\d|\(|\))+\n"
 highlight link jasminComment Comment
 
 syntax keyword jasminKeyword public 
