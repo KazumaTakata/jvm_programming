@@ -23,8 +23,8 @@
 
  new writeToFile
  dup 
- sipush 300
- sipush 100
+ sipush 20
+ sipush 10
  invokespecial writeToFile/<init> (II)V
 
  invokevirtual writeToFile/write ()V

@@ -49,6 +49,49 @@ getfield writeToFile/width I
 invokestatic java/lang/String/valueOf (I)Ljava/lang/String;
 invokevirtual java/io/PrintWriter/print (Ljava/lang/String;)V
 
+;var j col in 10
+;var i row in 11
+aload_0 
+getfield writeToFile/height I
+istore 10 
+
+bipush 0
+istore 11 
+
+
+
+colLoop:
+    iload 10
+    sipush 0 
+    if_icmplt colBreak 
+
+rowLoop:
+    iload 11
+    aload_0
+    getfield writeToFile/width I
+    if_icmpge rowBreak
+
+    ;main loop
+    dup    
+    iload 11
+    invokestatic java/lang/String/valueOf (I)Ljava/lang/String;
+    invokevirtual java/io/PrintWriter/println (Ljava/lang/String;)V
+
+
+    iinc 11 1
+    goto rowLoop
+
+rowBreak:
+    bipush 0
+    istore 11 
+
+    iinc 10 -1
+    goto colLoop
+
+colBreak:
+
+
+
 
 
 invokevirtual java/io/PrintWriter/close ()V
