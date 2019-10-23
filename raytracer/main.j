@@ -1,25 +1,28 @@
 .class public Main 
 .super java/lang/Object
 .method public static main([Ljava/lang/String;)V
- new TestConstructor  
+ 
+
+ new vec3 
  dup
- bipush 123 
- invokespecial TestConstructor/<init> (I)V
- astore 10
+ ldc2_w 1.4
+ ldc2_w 4.0
+ ldc2_w 5.0
+ invokespecial vec3/<init> (DDD)V   
+
+ new vec3 
+ dup
+ ldc2_w 1.1
+ ldc2_w 4.4
+ ldc2_w 53.3
+ invokespecial vec3/<init> (DDD)V   
+
+ invokevirtual vec3/add (Lvec3;)Lvec3;
+
+ dup 
+ invokevirtual vec3/print ()V 
  
-
- getstatic java/lang/System/out Ljava/io/PrintStream;
- ldc "my age is: "
-
- aload 10
- getfield TestConstructor/age I
- invokestatic java/lang/String/valueOf (I)Ljava/lang/String;
- invokevirtual java/lang/String/concat (Ljava/lang/String;)Ljava/lang/String;
-
- invokevirtual java/io/PrintStream/println (Ljava/lang/String;)V
-
  
-
 
  new writeToFile
  dup 
