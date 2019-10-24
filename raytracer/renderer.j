@@ -76,7 +76,7 @@ return
 
 .end method
 
-.method static his_sphere (Lvec3;DLray;)I
+.method static hit_sphere (Lvec3;DLray;)D
 
 aload_3 
 getfield ray/origin Lvec3;
@@ -136,18 +136,30 @@ dmul
 dmul
 
 dsub
+dstore 17
 
+dload 17
 ldc2_w 0.0
 
 dcmpg
 ifgt greater
-iconst_0
-ireturn  
+ldc2_w -1.0
+dreturn  
 
 
 greater:
- iconst_1
- ireturn 
+ dload 13
+ dneg 
+ dload 17
+ invokestatic java/lang/Math/sqrt (D)D 
+ dsub   
+ 
+ ldc2_w 2.0
+ dload 11
+ dmul
+ ddiv
+
+ dreturn 
 
 
 .end method
@@ -166,8 +178,11 @@ ldc2_w 0.5
 
 aload_0 
 
-invokestatic Renderer/his_sphere (Lvec3;DLray;)I
-
+invokestatic Renderer/hit_sphere (Lvec3;DLray;)D
+dstore 20
+dload 20
+ldc2_w 0.0
+dcmpg
 ifgt hit 
 
 aload_0
@@ -212,14 +227,36 @@ areturn
 
 
 hit:
+
+aload_0
+dload 20
+invokevirtual ray/point_at_parameter (D)Lvec3;
+
  
 new vec3
 dup
-ldc2_w 1.0
 ldc2_w 0.0
 ldc2_w 0.0
+ldc2_w -1.0
 
 invokespecial vec3/<init> (DDD)V
+
+invokevirtual vec3/sub (Lvec3;)Lvec3;
+invokevirtual vec3/unit_vector ()Lvec3;
+
+
+new vec3
+dup
+ldc2_w 1.0
+ldc2_w 1.0
+ldc2_w 1.0
+
+invokespecial vec3/<init> (DDD)V
+
+invokevirtual vec3/add (Lvec3;)Lvec3;
+
+ldc2_w 0.5
+invokevirtual vec3/scalaMul (D)Lvec3;
 
 areturn
 
