@@ -4,9 +4,10 @@
 .field camera LCamera;
 .field height I
 .field width I
+.field hitable_list LHitable_list;
 .field writer  Ljava/io/PrintWriter;
 
-.method <init> (LCamera;II)V
+.method <init> (LCamera;IILHitable_list;)V
 aload_0
 invokespecial java/lang/Object/<init>()V
 
@@ -24,6 +25,10 @@ putfield Renderer/width I
 aload_0
 iload_3
 putfield Renderer/height I 
+
+aload_0
+aload 4
+putfield Renderer/hitable_list LHitable_list;
 
 return 
 .end method
@@ -164,21 +169,24 @@ greater:
 
 .end method
 
-.method static color(Lray;)Lvec3;
+.method static color(Lray;LHitable_list;)Lvec3;
 
-new vec3
+aload_1
+aload_0
+ldc2_w 0.0
+ldc2_w 1000.0
+new Hit_record  
 dup
-ldc2_w 0.0
-ldc2_w 0.0
-ldc2_w -1.0
+invokespecial vec3/<init> ()V
 
-invokespecial vec3/<init> (DDD)V
 
-ldc2_w 0.5
+; hit_record
+astore 30
+aload 30
 
-aload_0 
+invokevirtual Hitable_list/hit (Lray;DDLHit_record;)I
+ 
 
-invokestatic Renderer/hit_sphere (Lvec3;DLray;)D
 dstore 20
 dload 20
 ldc2_w 0.0
@@ -359,8 +367,12 @@ rowLoop:
     ddiv
  
     invokevirtual Camera/genRay (DD)Lray;
-   
-    invokestatic Renderer/color (Lray;)Lvec3;  
+ 
+     
+    iload_0
+    getfield Renderer/hitable_list LHitable_list;    
+ 
+    invokestatic Renderer/color (Lray;LHitable_list;)Lvec3;  
 
     ldc2_w 255.99D
     invokevirtual vec3/scalaMul (D)Lvec3;

@@ -45,7 +45,67 @@
  
  sipush 200
  sipush 100
- invokespecial Renderer/<init> (LCamera;II)V
+
+ ldc 2
+ anewarray Hitable
+ dup
+
+ ;sphere 1 
+ new Sphere 
+ dup
+ 
+ ;center 
+ new vec3 
+ dup
+ ldc2_w 0.0 
+ ldc2_w 0.0
+ ldc2_w -1.0 
+ invokespecial vec3/<init> (DDD)V   
+
+ ;radius
+ ldc2_w 0.5
+
+ invokespecial Sphere/<init> (Lvec3;D)V
+
+ ;store in array at 0
+ ldc 0
+ aastore
+
+
+ dup
+ ;sphere 2 
+ new Sphere 
+ dup
+ 
+ ;center 
+ new vec3 
+ dup
+ ldc2_w 0.0 
+ ldc2_w -100.5
+ ldc2_w -1.0 
+ invokespecial vec3/<init> (DDD)V   
+
+ ;radius
+ ldc2_w 100.0
+
+ invokespecial Sphere/<init> (Lvec3;D)V
+
+ ldc 1
+ aastore
+
+ astore 20
+ 
+ new Hitable_list
+ dup
+
+ aload 20
+ ldc 2 
+
+ invokespecial Hitable_list/<init> ([LHitable;I)V
+ 
+
+
+ invokespecial Renderer/<init> (LCamera;IILHitable_list;)V
 
  invokevirtual Renderer/render ()V
 
