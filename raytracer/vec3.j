@@ -55,6 +55,51 @@ areturn
 
 .end method
 
+.method length()D
+
+aload_0
+getfield vec3/x D 
+dup2 
+dmul
+
+aload_0
+getfield vec3/y D 
+dup2 
+dmul
+
+aload_0
+getfield vec3/z D 
+dup2 
+dmul
+
+dadd
+dadd
+
+invokestatic java/lang/Math/sqrt (D)D
+
+dreturn
+
+.end method
+
+.method unit_vector()Lvec3;
+
+aload_0
+
+ldc2_w 1.0  
+aload_0
+invokevirtual vec3/length ()D
+ddiv
+
+invokevirtual vec3/scalaMul (D)Lvec3; 
+
+areturn   
+
+
+
+
+
+.end method
+
 .method add(Lvec3;)Lvec3;
 
 new vec3
