@@ -76,8 +76,99 @@ return
 
 .end method
 
+.method static his_sphere (Lvec3;DLray;)I
+
+aload_3 
+getfield ray/origin Lvec3;
+aload_0
+
+invokevirtual vec3/sub (Lvec3;)Lvec3;
+astore 10
+
+
+
+aload_3 
+getfield ray/direction Lvec3;
+
+aload_3 
+getfield ray/direction Lvec3;
+
+invokevirtual vec3/dot (Lvec3;)D
+dstore 11
+
+
+
+aload 10
+ 
+aload_3 
+getfield ray/direction Lvec3;
+
+invokevirtual vec3/dot (Lvec3;)D
+
+ldc2_w 2.0
+dmul
+
+dstore 13
+
+
+aload 10
+dup
+invokevirtual vec3/dot (Lvec3;)D
+
+dload_1
+dup2
+dmul
+
+dsub
+
+dstore 15
+
+
+dload 13
+dup2
+dmul
+
+
+dload 11
+dload 15
+ldc2_w 4.0
+dmul
+dmul
+
+dsub
+
+ldc2_w 0.0
+
+dcmpg
+ifgt greater
+iconst_0
+ireturn  
+
+
+greater:
+ iconst_1
+ ireturn 
+
+
+.end method
 
 .method static color(Lray;)Lvec3;
+
+new vec3
+dup
+ldc2_w 0.0
+ldc2_w 0.0
+ldc2_w -1.0
+
+invokespecial vec3/<init> (DDD)V
+
+ldc2_w 0.5
+
+aload_0 
+
+invokestatic Renderer/his_sphere (Lvec3;DLray;)I
+
+ifgt hit 
 
 aload_0
 getfield ray/direction Lvec3;
@@ -118,6 +209,20 @@ invokevirtual vec3/scalaMul (D)Lvec3;
 invokevirtual vec3/add (Lvec3;)Lvec3;
 
 areturn
+
+
+hit:
+ 
+new vec3
+dup
+ldc2_w 1.0
+ldc2_w 0.0
+ldc2_w 0.0
+
+invokespecial vec3/<init> (DDD)V
+
+areturn
+
 
 .end method
 

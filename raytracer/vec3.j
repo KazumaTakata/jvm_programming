@@ -100,6 +100,69 @@ areturn
 
 .end method
 
+.method dot(Lvec3;)D
+
+
+aload_0
+getfield vec3/x D 
+aload_1 
+getfield vec3/x D
+dmul
+
+
+aload_0
+getfield vec3/y D
+aload_1 
+getfield vec3/y D
+dmul
+
+
+aload_0
+getfield vec3/z D
+aload_1 
+getfield vec3/z D
+dmul
+
+dadd
+dadd
+
+
+dreturn   
+
+.end method
+
+
+.method sub(Lvec3;)Lvec3;
+
+new vec3
+dup
+
+aload_0
+getfield vec3/x D 
+aload_1 
+getfield vec3/x D
+dsub
+
+
+aload_0
+getfield vec3/y D
+aload_1 
+getfield vec3/y D
+dsub
+
+
+aload_0
+getfield vec3/z D
+aload_1 
+getfield vec3/z D
+dsub
+
+invokespecial vec3/<init> (DDD)V
+
+areturn   
+
+.end method
+
 .method add(Lvec3;)Lvec3;
 
 new vec3
