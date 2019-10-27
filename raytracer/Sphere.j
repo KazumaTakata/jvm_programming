@@ -107,20 +107,20 @@ greater:
     
  ;temp 19
  dstore 19 
- 
+
+ dload 4
  dload 19
  ;tmax
- dload 4
- dcmpl 
+ dcmpg 
 
+;tmin
  dload 19
- ;tmin
  dload 2
  dcmpg 
 
  iadd
- ldc -2   
- if_icmpgt sphere_hit 
+ ldc 2   
+ if_icmpge sphere_hit 
 
 
 
@@ -136,19 +136,21 @@ greater:
  ;temp 19 
  dstore 19 
  
+
+ dload 4
  dload 19
  ;tmax
- dload 4
- dcmpl 
+ dcmpg 
 
- dload 19
+
  ;tmin
+ dload 19
  dload 2
  dcmpg 
 
  iadd
- ldc -2    
- if_icmpgt sphere_hit 
+ ldc 2   
+ if_icmpge sphere_hit 
 
 
  iconst_0
