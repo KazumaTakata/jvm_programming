@@ -1,14 +1,19 @@
 
 
-.class Hitable_list 
-.implements Hitable_list
+.class public Hitable_list 
+.super java/lang/Object
+.implements Hitable
 
 
 .field list [LHitable;
 .field size I
 
 
-.method <init>([LHitable;I)V
+.method public <init>([LHitable;I)V
+
+aload_0
+invokespecial java/lang/Object/<init>()V
+
 
 aload_0
 aload_1
@@ -23,7 +28,7 @@ return
 
 .end method
 
-.method hit (Lray;DDLHit_record;)I
+.method public hit (Lray;DDLHit_record;)I
 
 ;hit_anything 10  
 iconst_0
@@ -54,7 +59,7 @@ loop:
     dload 11 
     aload 6 
    
-    invokevirtual Hitable/hit (Lray;DDLHit_record;)I
+    invokeinterface Hitable/hit (Lray;DDLHit_record;)I 7
     ifgt hitted
    
     iinc 13 1 

@@ -50,10 +50,15 @@
  anewarray Hitable
  dup
 
+
+ ;array index 
+ ldc 0
+
+
  ;sphere 1 
  new Sphere 
  dup
- 
+
  ;center 
  new vec3 
  dup
@@ -67,12 +72,16 @@
 
  invokespecial Sphere/<init> (Lvec3;D)V
 
+
  ;store in array at 0
- ldc 0
  aastore
 
 
  dup
+ 
+ ;array index
+ ldc 1
+
  ;sphere 2 
  new Sphere 
  dup
@@ -90,7 +99,6 @@
 
  invokespecial Sphere/<init> (Lvec3;D)V
 
- ldc 1
  aastore
 
  astore 20

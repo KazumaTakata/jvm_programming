@@ -1,13 +1,18 @@
 
-
-.class Sphere 
+.class public Sphere 
+.super java/lang/Object
 .implements Hitable
 
 .field private center Lvec3;
 .field private radius D
 
 
-.method <init> (Lvec3;D)V
+.method public <init> (Lvec3;D)V
+
+
+aload_0
+invokespecial java/lang/Object/<init>()V
+
 
 aload_0 
 aload_1
@@ -15,7 +20,7 @@ putfield Sphere/center Lvec3;
 
 aload_0 
 dload_2
-putfield Sphere/radius D;
+putfield Sphere/radius D
 
 return
 
@@ -113,8 +118,9 @@ greater:
  dload 2
  dcmpg 
 
- imul
- ifgt sphere_hit 
+ iadd
+ ldc -2   
+ if_icmpgt sphere_hit 
 
 
 
@@ -140,13 +146,15 @@ greater:
  dload 2
  dcmpg 
 
- imul
- ifgt sphere_hit 
+ iadd
+ ldc -2    
+ if_icmpgt sphere_hit 
+
 
  iconst_0
  ireturn 
  
-:sphere_hit 
+sphere_hit: 
  
  aload 6
  dload 19
@@ -160,7 +168,7 @@ greater:
  putfield Hit_record/p Lvec3; 
  
  aload 6
- aload_1
+ aload 6
  getfield Hit_record/p Lvec3;
  aload_0
  getfield Sphere/center Lvec3;

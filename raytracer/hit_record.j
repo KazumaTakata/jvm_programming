@@ -1,13 +1,17 @@
 
 
-.class Hit_record 
+.class public Hit_record 
+.super java/lang/Object
 
 
 .field t D
 .field p Lvec3;
 .field normal Lvec3;
 
-.method <init> ()V
+.method public <init> ()V
+
+aload_0
+invokespecial java/lang/Object/<init>()V
 
 
 aload_0
@@ -26,10 +30,13 @@ putfield Hit_record/normal Lvec3;
 return 
 
 
-
 .end method
 
-.method <init> (DLvec3;Lvec3;)V
+.method public <init> (DLvec3;Lvec3;)V
+
+aload_0
+invokespecial java/lang/Object/<init>()V
+
 
 aload_0
 dload_1

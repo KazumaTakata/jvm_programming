@@ -5,6 +5,10 @@ oolong -g renderer.j
 oolong -g vec3.j
 oolong -g ray.j
 oolong -g camera.j
+oolong -g  hitable.j
+oolong -g  hit_record.j
+oolong -g hitable_list.j
+oolong -g Sphere.j
 java -cp ./class/  Main
 
 
