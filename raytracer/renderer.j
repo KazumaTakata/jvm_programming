@@ -192,16 +192,36 @@ hit:
 aload 30
 getfield Hit_record/normal Lvec3;
 
+;get p
+aload 30
+getfield Hit_record/p Lvec3;
 
-new vec3
-dup
-ldc2_w 1.0
-ldc2_w 1.0
-ldc2_w 1.0
-
-invokespecial vec3/<init> (DDD)V
+invokestatic Renderer/random_in_unit_sphere ()Lvec3;
 
 invokevirtual vec3/add (Lvec3;)Lvec3;
+
+invokevirtual vec3/add (Lvec3;)Lvec3;
+
+;var target
+astore 50
+
+new ray
+dup
+
+aload 30
+getfield Hit_record/p Lvec3;
+
+aload 50
+aload 30
+getfield Hit_record/p Lvec3;
+invokevirtual vec3/sub (Lvec3;)Lvec3;
+
+invokespecial ray/<init> (Lvec3;Lvec3;)V
+
+;var hitablelist
+aload_1
+
+invokestatic Renderer/color (Lray;LHitable_list;)Lvec3;  
 
 ldc2_w 0.5
 invokevirtual vec3/scalaMul (D)Lvec3;
@@ -384,7 +404,7 @@ samplingBreak:
     astore 23
 
   
-
+    invokevirtual vec3/sqrt ()Lvec3; 
 
 
     ldc2_w 255.99D

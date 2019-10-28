@@ -81,6 +81,32 @@ dreturn
 
 .end method
 
+.method sqrt()Lvec3;
+
+new vec3
+dup
+
+aload_0
+getfield vec3/x D 
+invokestatic java/lang/Math/sqrt (D)D
+
+aload_0
+getfield vec3/y D 
+invokestatic java/lang/Math/sqrt (D)D
+
+aload_0
+getfield vec3/z D 
+invokestatic java/lang/Math/sqrt (D)D
+
+
+
+invokespecial vec3/<init> (DDD)V
+
+areturn   
+
+
+.end method
+
 .method unit_vector()Lvec3;
 
 aload_0
