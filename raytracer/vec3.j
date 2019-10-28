@@ -5,6 +5,28 @@
 .field y D 
 .field z D
 
+.method <init>()V
+
+aload_0
+invokespecial java/lang/Object/<init>()V
+
+aload_0
+ldc2_w 0.0
+putfield vec3/x D 
+
+aload_0
+ldc2_w 0.0
+putfield vec3/y D 
+
+aload_0
+ldc2_w 0.0
+putfield vec3/z D 
+
+
+return
+
+.end method
+
 .method <init>(DDD)V
 
 aload_0
@@ -25,6 +47,36 @@ dload 5
 putfield vec3/z D 
 
 return
+
+.end method
+
+.method mul(Lvec3;)Lvec3;
+
+
+new vec3
+dup
+
+aload_0
+getfield vec3/x D 
+aload_1 
+getfield vec3/x D 
+dmul
+
+aload_0
+getfield vec3/y D 
+aload_1 
+getfield vec3/y D 
+dmul
+
+aload_0
+getfield vec3/z D 
+aload_1 
+getfield vec3/z D 
+dmul
+
+invokespecial vec3/<init> (DDD)V
+
+areturn   
 
 .end method
 

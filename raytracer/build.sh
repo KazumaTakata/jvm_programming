@@ -9,6 +9,9 @@ oolong -g  hitable.j
 oolong -g  hit_record.j
 oolong -g hitable_list.j
 oolong -g Sphere.j
+oolong -g lambertian.j
+oolong -g material.j
+
 java -cp ./class/  Main
 
 

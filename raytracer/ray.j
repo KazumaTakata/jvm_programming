@@ -4,6 +4,42 @@
 .field origin Lvec3; 
 .field direction Lvec3; 
 
+.method <init>()V
+
+aload_0
+invokespecial java/lang/Object/<init>()V
+
+aload_0
+
+
+new vec3
+dup
+ldc2_w 0.0
+ldc2_w 0.0
+ldc2_w 0.0
+
+invokespecial vec3/<init> (DDD)V
+
+putfield ray/origin Lvec3; 
+
+
+aload_0
+
+new vec3
+dup
+ldc2_w 0.0
+ldc2_w 0.0
+ldc2_w 0.0
+
+invokespecial vec3/<init> (DDD)V
+
+putfield ray/direction Lvec3; 
+
+return
+
+.end method
+
+
 .method <init>(Lvec3;Lvec3;)V
 
 aload_0

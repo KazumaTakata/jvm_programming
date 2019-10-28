@@ -126,7 +126,7 @@ break:
 
 .end method
 
-.method static color(Lray;LHitable_list;)Lvec3;
+.method static color(Lray;LHitable_list;I)Lvec3;
 
 aload_1
 aload_0
@@ -188,46 +188,67 @@ areturn
 
 hit:
 
-;get normal
-aload 30
-getfield Hit_record/normal Lvec3;
-
-;get p
-aload 30
-getfield Hit_record/p Lvec3;
-
-invokestatic Renderer/random_in_unit_sphere ()Lvec3;
-
-invokevirtual vec3/add (Lvec3;)Lvec3;
-
-invokevirtual vec3/add (Lvec3;)Lvec3;
-
-;var target
-astore 50
-
 new ray
 dup
+invokespecial ray/<init> ()V
+astore 100
 
+new vec3
+dup 
+invokespecial vec3/<init> ()V
+astore 101
+
+;material 
 aload 30
-getfield Hit_record/p Lvec3;
+getfield Hit_record/mat Lmaterial;
 
-aload 50
+;ray
+aload_0
+
+;record
 aload 30
-getfield Hit_record/p Lvec3;
-invokevirtual vec3/sub (Lvec3;)Lvec3;
 
-invokespecial ray/<init> (Lvec3;Lvec3;)V
+aload 101
+aload 100
 
+invokeinterface material/scatter (Lray;LHit_record;Lvec3;Lray;)I 5
+ifeq absorbed
+
+
+iload_2
+bipush 50
+if_icmpge absorbed 
+
+
+
+aload 100
 ;var hitablelist
 aload_1
 
-invokestatic Renderer/color (Lray;LHitable_list;)Lvec3;  
+;depth
+iload_2
+ldc 1
+iadd
 
-ldc2_w 0.5
-invokevirtual vec3/scalaMul (D)Lvec3;
+invokestatic Renderer/color (Lray;LHitable_list;I)Lvec3;  
+
+aload 101
+
+invokevirtual vec3/mul (Lvec3;)Lvec3;
 
 areturn
 
+absorbed:
+ 
+new vec3
+dup
+ldc2_w 0.0
+ldc2_w 0.0
+ldc2_w 0.0
+
+invokespecial vec3/<init> (DDD)V
+
+areturn
 
 .end method
 
@@ -368,8 +389,11 @@ multiSampling:
      
     aload_0
     getfield Renderer/hitable_list LHitable_list;    
+    
+    ;depth
+    ldc 0
  
-    invokestatic Renderer/color (Lray;LHitable_list;)Lvec3;  
+    invokestatic Renderer/color (Lray;LHitable_list;I)Lvec3;  
 
     aload 23
 

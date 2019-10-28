@@ -7,6 +7,7 @@
 .field t D
 .field p Lvec3;
 .field normal Lvec3;
+.field mat  Lmaterial;
 
 .method public <init> ()V
 
@@ -27,12 +28,18 @@ aload_0
 aconst_null
 putfield Hit_record/normal Lvec3;
 
+aload_0
+aconst_null
+putfield Hit_record/mat Lmaterial;
+
+
+
 return 
 
 
 .end method
 
-.method public <init> (DLvec3;Lvec3;)V
+.method public <init> (DLvec3;Lvec3;Lmat;)V
 
 aload_0
 invokespecial java/lang/Object/<init>()V
@@ -49,6 +56,11 @@ putfield Hit_record/p Lvec3;
 aload_0
 aload 4
 putfield Hit_record/normal Lvec3;
+
+aload_0
+aload 5 
+putfield Hit_record/mat Lmaterial;
+
 
 return 
 

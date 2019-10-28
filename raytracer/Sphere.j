@@ -5,9 +5,9 @@
 
 .field private center Lvec3;
 .field private radius D
+.field private mat Lmaterial;
 
-
-.method public <init> (Lvec3;D)V
+.method public <init> (Lvec3;DLmaterial;)V
 
 
 aload_0
@@ -21,6 +21,12 @@ putfield Sphere/center Lvec3;
 aload_0 
 dload_2
 putfield Sphere/radius D
+
+
+aload_0 
+aload 4
+putfield Sphere/mat Lmaterial;
+
 
 return
 
@@ -183,6 +189,10 @@ sphere_hit:
 
  putfield Hit_record/normal Lvec3; 
 
+ aload 6
+ aload_0
+ getfield Sphere/mat Lmaterial;
+ putfield Hit_record/mat Lmaterial;
 
  iconst_1
  ireturn 

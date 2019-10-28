@@ -70,7 +70,21 @@
  ;radius
  ldc2_w 0.5
 
- invokespecial Sphere/<init> (Lvec3;D)V
+ new lambertian
+ dup
+ 
+ ;albedo 
+ new vec3 
+ dup
+ ldc2_w 0.8 
+ ldc2_w 0.9
+ ldc2_w 0.3 
+ invokespecial vec3/<init> (DDD)V   
+
+ invokespecial lambertian/<init> (Lvec3;)V
+
+
+ invokespecial Sphere/<init> (Lvec3;DLmaterial;)V
 
 
  ;store in array at 0
@@ -97,7 +111,22 @@
  ;radius
  ldc2_w 100.0
 
- invokespecial Sphere/<init> (Lvec3;D)V
+ new lambertian
+ dup
+ 
+ ;albedo 
+ new vec3 
+ dup
+ ldc2_w 0.8 
+ ldc2_w 0.3
+ ldc2_w 0.3 
+ invokespecial vec3/<init> (DDD)V   
+
+ invokespecial lambertian/<init> (Lvec3;)V
+
+
+ invokespecial Sphere/<init> (Lvec3;DLmaterial;)V
+
 
  aastore
 
