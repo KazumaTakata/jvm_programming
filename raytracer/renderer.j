@@ -82,6 +82,8 @@ return
 .end method
 
 
+
+
 .method static color(Lray;LHitable_list;)Lvec3;
 
 aload_1
@@ -109,7 +111,7 @@ ldc2_w 1.0
 dadd
 ldc2_w 0.5
 dmul
-dstore 10
+dstore 40
 
 new vec3
 dup
@@ -120,7 +122,7 @@ ldc2_w 1.0
 invokespecial vec3/<init> (DDD)V
 
 ldc2_w 1.0
-dload 10
+dload 40
 dsub
 
 invokevirtual vec3/scalaMul (D)Lvec3;
@@ -133,7 +135,7 @@ ldc2_w 1.0
 
 invokespecial vec3/<init> (DDD)V
 
-dload 10
+dload 40
 
 invokevirtual vec3/scalaMul (D)Lvec3;
 
@@ -227,6 +229,25 @@ bipush 0
 istore 11 
 
 
+;var s sampling in 21
+sipush 0
+istore 21
+
+;var ns in 22
+sipush 100
+istore 22
+
+;var averaged color in 23
+new vec3
+dup
+ldc2_w 0.0
+ldc2_w 0.0
+ldc2_w 0.0
+
+invokespecial vec3/<init> (DDD)V
+
+astore 23
+
 
 colLoop:
     iload 10
@@ -239,14 +260,26 @@ rowLoop:
     getfield Renderer/width I
     if_icmpge rowBreak
 
+   
+
+multiSampling:    
+    iload 21
+    iload 22
+    if_icmpge samplingBreak 
+
+
     ;main loop
     aload_0
     getfield Renderer/camera LCamera;
-        
-
+    
+    
     ;var u
     iload 11
     i2d
+
+    invokestatic java/lang/Math/random ()D
+    dadd
+
     aload_0 
     getfield Renderer/width I
     i2d
@@ -257,10 +290,16 @@ rowLoop:
     ;var v
     iload 10
     i2d
+
+    invokestatic java/lang/Math/random ()D
+    dadd
+
     aload_0 
     getfield Renderer/height I
     i2d
     ddiv
+    
+
  
     invokevirtual Camera/genRay (DD)Lray;
  
@@ -269,6 +308,42 @@ rowLoop:
     getfield Renderer/hitable_list LHitable_list;    
  
     invokestatic Renderer/color (Lray;LHitable_list;)Lvec3;  
+
+    aload 23
+
+    invokevirtual vec3/add (Lvec3;)Lvec3;
+
+    astore 23
+
+    iinc 21 1
+    goto multiSampling
+
+samplingBreak:
+    ;reset s
+    bipush 0
+    istore 21
+
+
+
+    aload 23 
+    ldc2_w 1.0 
+    iload 22
+    i2d
+    ddiv
+    invokevirtual vec3/scalaMul (D)Lvec3;
+
+    ;reset averaged color
+    new vec3
+    dup
+    ldc2_w 0.0
+    ldc2_w 0.0
+    ldc2_w 0.0
+    invokespecial vec3/<init> (DDD)V
+    astore 23
+
+  
+
+
 
     ldc2_w 255.99D
     invokevirtual vec3/scalaMul (D)Lvec3;
