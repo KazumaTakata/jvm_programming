@@ -82,7 +82,49 @@ return
 .end method
 
 
+.method static random_in_unit_sphere()Lvec3;
 
+loop:
+
+    new vec3
+    dup
+    invokestatic java/lang/Math/random ()D
+    invokestatic java/lang/Math/random ()D
+    invokestatic java/lang/Math/random ()D
+    invokespecial vec3/<init> (DDD)V
+    
+    
+    ldc2_w 2.0
+ 
+    invokevirtual vec3/scalaMul(D)Lvec3;
+
+    new vec3
+    dup
+    ldc2_w 1.0
+    ldc2_w 1.0
+    ldc2_w 1.0
+    invokespecial vec3/<init> (DDD)V
+
+    invokevirtual vec3/sub(Lvec3;)Lvec3;
+    
+    astore 10 
+    aload 10
+
+    invokevirtual vec3/length ()D
+    ldc2_w 1.0
+
+    dcmpg 
+
+    ldc -1 
+
+    if_icmpeq break    
+    goto loop
+
+break:
+    aload 10
+    areturn
+
+.end method
 
 .method static color(Lray;LHitable_list;)Lvec3;
 
