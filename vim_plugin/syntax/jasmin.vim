@@ -3,7 +3,7 @@ if exists("b:current_syntax")
 endif
 
 
-syntax match jasminComment "\v;(\a|\s|\d|\(|\))+\n"
+syntax match jasminComment "\v(\s|\n)+;(\a|\s|\d|\(|\))+\n"
 highlight link jasminComment Comment
 
 syntax keyword jasminKeyword public 
@@ -20,6 +20,11 @@ highlight link jasminDeco Todo
 
 
 syntax keyword jasminType B C D F I J S V Z
+syntax match  jasminType "\vL.*;"
+
 highlight link jasminType Typedef 
+
+syntax region potionString start=/\v"/ skip=/\v\\./ end=/\v"/
+highlight link potionString String
 
 let b:current_syntax = "jasmin"
