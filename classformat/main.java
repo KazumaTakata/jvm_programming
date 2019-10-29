@@ -11,7 +11,7 @@ class Main {
       Parser parser = new Parser(bhold);
       parser.parse_magic();
       parser.parse_version();
-
+      parser.parse_constantPool();
     } catch (IOException e) {
       System.out.println(e.toString());
     }
