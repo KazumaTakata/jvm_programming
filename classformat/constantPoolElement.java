@@ -19,18 +19,33 @@ class ConstantPoolElement {
 
   public PoolTag tag;
   public int[] values;
+  public String string;
 
   public ConstantPoolElement(PoolTag tag, int[] values) {
     this.tag = tag;
     this.values = values;
+    this.string = null;
+  }
+
+  public ConstantPoolElement(PoolTag tag, int[] values, String string) {
+    this.tag = tag;
+    this.values = values;
+    this.string = string;
   }
 
   public void PrintOut() {
     System.out.print("tag: " + this.tag.name());
-    System.out.print(" value: ");
-    for (int i = 0; i < this.values.length; i++) {
-      System.out.print("#" + String.valueOf(values[i]));
+    if (this.values != null) {
+
+      System.out.print(" value: ");
+      for (int i = 0; i < this.values.length; i++) {
+        System.out.print("#" + String.valueOf(values[i]));
+      }
+      System.out.println("");
     }
-    System.out.println("");
+
+    if (this.string != null) {
+      System.out.println(this.string);
+    }
   }
 }
