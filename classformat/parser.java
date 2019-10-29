@@ -21,6 +21,13 @@ class Parser {
     System.out.println("magic_number: cafebabe");
   }
 
+  public int get_Unsigned_twoByte() {
+    int unsigned_high = (0xFF & bhold.getCurByte()) << 8;
+    int unsigned_low = 0xFF & bhold.getCurByte();
+    int unsigned = unsigned_high + unsigned_low;
+    return unsigned;
+  }
+
   public void parse_version() {
     byte mi_ver1 = bhold.getCurByte();
     byte mi_ver2 = bhold.getCurByte();
@@ -32,9 +39,20 @@ class Parser {
   }
 
   public void parse_constantPool() {
-    int constant_size_high = (0xFF & bhold.getCurByte()) << 8;
-    int constant_size_low = 0xFF & bhold.getCurByte();
-    int constant_size = constant_size_high + constant_size_low - 1;
+    int constant_size = get_Unsigned_twoByte() - 1;
     System.out.println("constant pool size: " + constant_size);
+
+    int curByte = 0xFF & bhold.getCurByte();
+
+    switch (curByte) {
+      case 0x0a:
+        int class_index = get_Unsigned_twoByte();
+        int name_and_type_index = get_Unsigned_twoByte();
+        int[] values = {class_index, name_and_type_index};
+        ConstantPoolElement ele = new ConstantPoolElement(PoolTag.CONSTANT_METHODREF, values);
+        ele.PrintOut();
+
+        break;
+    }
   }
 }
