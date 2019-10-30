@@ -13,6 +13,7 @@ class Main {
       parser.parse_version();
       parser.parse_constantPool();
       parser.parse_accessFlag();
+      parser.parse_class();
     } catch (IOException e) {
       System.out.println(e.toString());
     }

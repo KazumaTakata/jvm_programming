@@ -31,6 +31,15 @@ class Parser {
     return unsigned;
   }
 
+  public int get_Unsigned_fourByte() {
+    int unsigned_4 = (0xFF & bhold.getCurByte()) << 8 * 3;
+    int unsigned_3 = (0xFF & bhold.getCurByte()) << 8 * 2;
+    int unsigned_2 = (0xFF & bhold.getCurByte()) << 8 * 1;
+    int unsigned_1 = (0xFF & bhold.getCurByte()) << 8 * 0;
+    int unsigned = unsigned_4 + unsigned_3 + unsigned_2 + unsigned_1;
+    return unsigned;
+  }
+
   public void parse_version() {
     byte mi_ver1 = bhold.getCurByte();
     byte mi_ver2 = bhold.getCurByte();
@@ -77,6 +86,92 @@ class Parser {
     System.out.println(flags);
   }
 
+  public void parse_class() {
+    int this_class = get_Unsigned_twoByte();
+    System.out.println("this_class: " + this_class);
+    int super_class = get_Unsigned_twoByte();
+    System.out.println("super_class: " + super_class);
+    int interface_count = get_Unsigned_twoByte();
+    System.out.println("interface_count: " + interface_count);
+
+    if (interface_count > 0) {}
+
+    int field_count = get_Unsigned_twoByte();
+    System.out.println("field_count: " + field_count);
+
+    if (field_count > 0) {}
+
+    int method_count = get_Unsigned_twoByte();
+    System.out.println("method_count: " + method_count);
+
+    parse_method();
+  }
+
+  public void parse_method() {
+    int access_flags = get_Unsigned_twoByte();
+    int name_index = get_Unsigned_twoByte();
+    int descriptor_index = get_Unsigned_twoByte();
+    int attributes_count = get_Unsigned_twoByte();
+
+    System.out.println("{");
+    System.out.println("name_index: " + name_index);
+    System.out.println("descriptor_index: " + descriptor_index);
+    System.out.println("attributes_count: " + attributes_count);
+    parse_attribute();
+    System.out.println("}");
+  }
+
+  public void parse_attribute() {
+    int attribute_name_index = get_Unsigned_twoByte();
+    int attribute_length = get_Unsigned_fourByte();
+
+    // if name_index is Code
+    if (true) {
+
+      int max_stack = get_Unsigned_twoByte();
+      int max_locals = get_Unsigned_twoByte();
+      int code_length = get_Unsigned_fourByte();
+
+      System.out.println("   {");
+      System.out.println("     name_index: " + attribute_name_index);
+      System.out.println("     attribute_length: " + attribute_length);
+      System.out.println("     max_stack: " + max_stack);
+      System.out.println("     max_locals: " + max_locals);
+      System.out.println("     code_length: " + code_length);
+      parse_code(code_length);
+      System.out.println("    }");
+    }
+  }
+
+  public void parse_code(int code_length) {
+    for (int i = 0; i < code_length; i++) {
+      int opcode = 0xFF & bhold.getCurByte();
+
+      switch (opcode) {
+        case 0x2a:
+          {
+            System.out.println("          aload_0");
+            break;
+          }
+        case 0xb7:
+          {
+            System.out.print("          invokespecial");
+            int index = get_Unsigned_twoByte();
+            i += 2;
+            System.out.println("#" + index);
+            break;
+          }
+        case 0xb1:
+          {
+            System.out.print("          return");
+            break;
+          }
+        default:
+            System.out.printf("        no opcode for %02x\n", opcode);
+      }
+    }
+  }
+
   public void parse_constantPool() {
     int constant_size = get_Unsigned_twoByte() - 1;
     System.out.println("constant pool size: " + constant_size);
@@ -84,6 +179,8 @@ class Parser {
     // constant_size = 7;
     for (int i = 0; i < constant_size; i++) {
       int curByte = 0xFF & bhold.getCurByte();
+
+      System.out.print("#" + (i + 1) + " ");
 
       switch (curByte) {
         case 0x0a:
