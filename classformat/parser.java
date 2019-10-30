@@ -3,9 +3,11 @@ import java.util.ArrayList;
 
 class Parser {
   private ByteHolder bhold;
+  private ArrayList<ConstantPoolElement> constantPoolList;
 
   public Parser(ByteHolder _bhold) {
     bhold = _bhold;
+    constantPoolList = new ArrayList<ConstantPoolElement>();
   }
 
   public void parse_magic() {
@@ -104,41 +106,75 @@ class Parser {
     int method_count = get_Unsigned_twoByte();
     System.out.println("method_count: " + method_count);
 
-    parse_method();
+    parse_method(method_count);
+
+    int class_attr_count = get_Unsigned_twoByte();
+    System.out.println("attributes_count: " + class_attr_count);
+
+    parse_attribute(class_attr_count);
   }
 
-  public void parse_method() {
-    int access_flags = get_Unsigned_twoByte();
-    int name_index = get_Unsigned_twoByte();
-    int descriptor_index = get_Unsigned_twoByte();
-    int attributes_count = get_Unsigned_twoByte();
+  public void parse_method(int method_count) {
 
-    System.out.println("{");
-    System.out.println("name_index: " + name_index);
-    System.out.println("descriptor_index: " + descriptor_index);
-    System.out.println("attributes_count: " + attributes_count);
-    parse_attribute();
-    System.out.println("}");
+    for (int i = 0; i < method_count; i++) {
+      int access_flags = get_Unsigned_twoByte();
+      int name_index = get_Unsigned_twoByte();
+      int descriptor_index = get_Unsigned_twoByte();
+      int attributes_count = get_Unsigned_twoByte();
+
+      System.out.println("{");
+      System.out.println("name_index: " + name_index);
+      System.out.println("descriptor_index: " + descriptor_index);
+      System.out.println("attributes_count: " + attributes_count);
+      parse_attribute(attributes_count);
+      System.out.println("}");
+    }
   }
 
-  public void parse_attribute() {
-    int attribute_name_index = get_Unsigned_twoByte();
-    int attribute_length = get_Unsigned_fourByte();
-
-    // if name_index is Code
-    if (true) {
-
-      int max_stack = get_Unsigned_twoByte();
-      int max_locals = get_Unsigned_twoByte();
-      int code_length = get_Unsigned_fourByte();
+  public void parse_attribute(int attributes_count) {
+    for (int i = 0; i < attributes_count; i++) {
+      int attribute_name_index = get_Unsigned_twoByte();
+      int attribute_length = get_Unsigned_fourByte();
 
       System.out.println("   {");
       System.out.println("     name_index: " + attribute_name_index);
       System.out.println("     attribute_length: " + attribute_length);
-      System.out.println("     max_stack: " + max_stack);
-      System.out.println("     max_locals: " + max_locals);
-      System.out.println("     code_length: " + code_length);
-      parse_code(code_length);
+
+      ConstantPoolElement const_ele = this.constantPoolList.get(attribute_name_index - 1);
+      switch (const_ele.string) {
+        case "Code":
+          {
+            int max_stack = get_Unsigned_twoByte();
+            int max_locals = get_Unsigned_twoByte();
+            int code_length = get_Unsigned_fourByte();
+            System.out.println("     max_stack: " + max_stack);
+            System.out.println("     max_locals: " + max_locals);
+            System.out.println("     code_length: " + code_length);
+            parse_code(code_length);
+            break;
+          }
+        case "LineNumberTable":
+          {
+            int line_number_table_length = get_Unsigned_twoByte();
+            System.out.println("     line_number_table_length:" + line_number_table_length);
+            System.out.println("      {");
+            for (int j = 0; j < line_number_table_length; j++) {
+              int start_pc = get_Unsigned_twoByte();
+              int line_number = get_Unsigned_twoByte();
+              System.out.println("     start_pc: " + start_pc);
+              System.out.println("     line_number: " + line_number);
+            }
+            System.out.println("      }");
+            break;
+          }
+        case "SourceFile":
+          {
+            int sourcefile_index = get_Unsigned_twoByte();
+            System.out.println("     sourcefile_index: " + sourcefile_index);
+
+            break;
+          }
+      }
       System.out.println("    }");
     }
   }
@@ -163,13 +199,49 @@ class Parser {
           }
         case 0xb1:
           {
-            System.out.print("          return");
+            System.out.println("          return");
+            break;
+          }
+        case 0xb2:
+          {
+            System.out.print("          getstatic");
+            int index = get_Unsigned_twoByte();
+            i += 2;
+            System.out.println("#" + index);
+            break;
+          }
+        case 0x12:
+          {
+            System.out.print("          ldc");
+            int index = 0xFF & bhold.getCurByte();
+            i += 1;
+            System.out.println("#" + index);
+
+            break;
+          }
+        case 0xb6:
+          {
+            System.out.print("          invokevirtual");
+            int index = get_Unsigned_twoByte();
+            i += 2;
+            System.out.println("#" + index);
+
             break;
           }
         default:
-            System.out.printf("        no opcode for %02x\n", opcode);
+          System.out.printf("        no opcode for %02x\n", opcode);
       }
     }
+
+    int exception_table_length = get_Unsigned_twoByte();
+    System.out.println("     exception_table_length: " + exception_table_length);
+
+    if (exception_table_length > 0) {}
+
+    int attributes_count = get_Unsigned_twoByte();
+    System.out.println("     attributes_count: " + attributes_count);
+
+    parse_attribute(attributes_count);
   }
 
   public void parse_constantPool() {
@@ -190,7 +262,7 @@ class Parser {
             int[] values = {class_index, name_and_type_index};
             ConstantPoolElement ele = new ConstantPoolElement(PoolTag.CONSTANT_METHODREF, values);
             ele.PrintOut();
-
+            this.constantPoolList.add(ele);
             break;
           }
         case 0x09:
@@ -200,6 +272,7 @@ class Parser {
             int[] values = {class_index, name_and_type_index};
             ConstantPoolElement ele = new ConstantPoolElement(PoolTag.CONSTANT_FIELDREF, values);
             ele.PrintOut();
+            this.constantPoolList.add(ele);
 
             break;
           }
@@ -209,6 +282,7 @@ class Parser {
             int[] values = {string_index};
             ConstantPoolElement ele = new ConstantPoolElement(PoolTag.CONSTANT_STRING, values);
             ele.PrintOut();
+            this.constantPoolList.add(ele);
 
             break;
           }
@@ -218,6 +292,7 @@ class Parser {
             int[] values = {name_index};
             ConstantPoolElement ele = new ConstantPoolElement(PoolTag.CONSTANT_CLASS, values);
             ele.PrintOut();
+            this.constantPoolList.add(ele);
 
             break;
           }
@@ -228,6 +303,7 @@ class Parser {
             String s = new String(bytes, StandardCharsets.UTF_8);
             ConstantPoolElement ele = new ConstantPoolElement(PoolTag.CONSTANT_UTF8, null, s);
             ele.PrintOut();
+            this.constantPoolList.add(ele);
 
             break;
           }
@@ -238,6 +314,7 @@ class Parser {
             int[] values = {name_index, descriptor_index};
             ConstantPoolElement ele = new ConstantPoolElement(PoolTag.CONSTANT_NAMEANDTYPE, values);
             ele.PrintOut();
+            this.constantPoolList.add(ele);
 
             break;
           }
