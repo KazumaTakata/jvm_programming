@@ -103,56 +103,85 @@ class Parser {
 
     int method_count = get_Unsigned_twoByte();
     this.CFormat.methods_count = method_count;
-    this.CFormat.printOut();
-    parse_method(method_count);
-
+    ArrayList<Method_info> methods = parse_method(method_count);
+    this.CFormat.methods = methods;
     int class_attr_count = get_Unsigned_twoByte();
-    System.out.println("attributes_count: " + class_attr_count);
+    this.CFormat.attributes_count = class_attr_count;
 
-    parse_attribute(class_attr_count);
+    ArrayList<Attribute_info> attr_infos = parse_attribute(class_attr_count);
+    this.CFormat.attributes = attr_infos;
+    this.CFormat.printOut();
   }
 
-  public void parse_method(int method_count) {
+  public ArrayList<Method_info> parse_method(int method_count) {
 
+    ArrayList<Method_info> method_info_list = new ArrayList<Method_info>();
     for (int i = 0; i < method_count; i++) {
+      Method_info method_info = new Method_info();
+      method_info_list.add(method_info);
+
       int access_flags = get_Unsigned_twoByte();
       int name_index = get_Unsigned_twoByte();
       int descriptor_index = get_Unsigned_twoByte();
       int attributes_count = get_Unsigned_twoByte();
 
-      System.out.println("{");
-      System.out.println("name_index: " + name_index);
-      System.out.println("descriptor_index: " + descriptor_index);
-      System.out.println("attributes_count: " + attributes_count);
-      parse_attribute(attributes_count);
-      System.out.println("}");
+      method_info.access_flags = access_flags;
+      method_info.name_index = name_index;
+      method_info.descriptor_index = descriptor_index;
+      method_info.attributes_count = attributes_count;
+      ArrayList<Attribute_info> attr = parse_attribute(attributes_count);
+      method_info.attributes = attr;
     }
+
+    return method_info_list;
   }
 
-  public void parse_attribute(int attributes_count) {
+  public ArrayList<Attribute_info> parse_attribute(int attributes_count) {
+    ArrayList<Attribute_info> attr_list = new ArrayList<Attribute_info>();
     for (int i = 0; i < attributes_count; i++) {
+      Attribute_info attr_info = new Attribute_info();
+      attr_list.add(attr_info);
       int attribute_name_index = get_Unsigned_twoByte();
       int attribute_length = get_Unsigned_fourByte();
 
-      System.out.println("   {");
-      System.out.println("     name_index: " + attribute_name_index);
-      System.out.println("     attribute_length: " + attribute_length);
+      attr_info.attribute_length = attribute_length;
 
-      ConstantPoolElement const_ele = this.constantPoolList.get(attribute_name_index - 1);
+      ConstantPoolElement const_ele = this.CFormat.constantPoolList.get(attribute_name_index - 1);
       switch (const_ele.string) {
         case "Code":
           {
+            attr_info.name = Attribute.CODE;
+
+            Code_attribute code_attr = new Code_attribute();
+            attr_info.code_attribute = code_attr;
+
             int max_stack = get_Unsigned_twoByte();
             int max_locals = get_Unsigned_twoByte();
             int code_length = get_Unsigned_fourByte();
-            System.out.println("     max_stack: " + max_stack);
-            System.out.println("     max_locals: " + max_locals);
-            System.out.println("     code_length: " + code_length);
-            parse_code(code_length);
+
+            code_attr.max_stack = max_stack;
+            code_attr.max_locals = max_locals;
+            code_attr.code_length = code_length;
+            ArrayList<Code> codes = parse_code(code_length);
+            code_attr.codes = codes;
+
+            int exception_table_length = get_Unsigned_twoByte();
+
+            System.out.println("     exception_table_length: " + exception_table_length);
+
+            if (exception_table_length > 0) {}
+
+            int attributes_count_of_code = get_Unsigned_twoByte();
+            code_attr.attributes_count = attributes_count_of_code;
+            ArrayList<Attribute_info> attributes = parse_attribute(attributes_count_of_code);
+            code_attr.attributes = attributes;
+
             break;
           }
         case "LineNumberTable":
           {
+            attr_info.name = Attribute.LINENUMBERTABLE;
+
             int line_number_table_length = get_Unsigned_twoByte();
             System.out.println("     line_number_table_length:" + line_number_table_length);
             System.out.println("      {");
@@ -167,6 +196,8 @@ class Parser {
           }
         case "SourceFile":
           {
+            attr_info.name = Attribute.SOURCEFILE;
+
             int sourcefile_index = get_Unsigned_twoByte();
             System.out.println("     sourcefile_index: " + sourcefile_index);
 
@@ -175,71 +206,63 @@ class Parser {
       }
       System.out.println("    }");
     }
+    return attr_list;
   }
 
-  public void parse_code(int code_length) {
+  public ArrayList<Code> parse_code(int code_length) {
+    ArrayList<Code> code_list = new ArrayList<Code>();
+
     for (int i = 0; i < code_length; i++) {
+      Code code = new Code();
+      code_list.add(code);
       int opcode = 0xFF & bhold.getCurByte();
 
       switch (opcode) {
         case 0x2a:
           {
-            System.out.println("          aload_0");
+            code.opcode = Opcode.ALOAD_0;
             break;
           }
         case 0xb7:
           {
-            System.out.print("          invokespecial");
-            int index = get_Unsigned_twoByte();
+            code.opcode = Opcode.INVOKESPECIAL;
+            code.args.add(get_Unsigned_twoByte());
             i += 2;
-            System.out.println("#" + index);
             break;
           }
         case 0xb1:
           {
-            System.out.println("          return");
+            code.opcode = Opcode.RETURN;
             break;
           }
         case 0xb2:
           {
-            System.out.print("          getstatic");
-            int index = get_Unsigned_twoByte();
+            code.opcode = Opcode.GETSTATIC;
+            code.args.add(get_Unsigned_twoByte());
             i += 2;
-            System.out.println("#" + index);
             break;
           }
         case 0x12:
           {
-            System.out.print("          ldc");
-            int index = 0xFF & bhold.getCurByte();
+            code.opcode = Opcode.lDC;
+            code.args.add(0xFF & bhold.getCurByte());
             i += 1;
-            System.out.println("#" + index);
-
             break;
           }
         case 0xb6:
           {
-            System.out.print("          invokevirtual");
-            int index = get_Unsigned_twoByte();
+            code.opcode = Opcode.INVOKEVIRTUAL;
+            code.args.add(get_Unsigned_twoByte());
             i += 2;
-            System.out.println("#" + index);
-
             break;
           }
         default:
-          System.out.printf("        no opcode for %02x\n", opcode);
+          {
+            System.out.printf("        no opcode for %02x\n", opcode);
+          }
       }
     }
-
-    int exception_table_length = get_Unsigned_twoByte();
-    System.out.println("     exception_table_length: " + exception_table_length);
-
-    if (exception_table_length > 0) {}
-
-    int attributes_count = get_Unsigned_twoByte();
-    System.out.println("     attributes_count: " + attributes_count);
-
-    parse_attribute(attributes_count);
+    return code_list;
   }
 
   public void parse_constantPool() {

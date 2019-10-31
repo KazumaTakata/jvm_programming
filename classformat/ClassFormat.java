@@ -15,6 +15,8 @@ class ClassFormat {
   public int[] fields;
   public int methods_count;
   public ArrayList<Method_info> methods;
+  public int attributes_count;
+  public ArrayList<Attribute_info> attributes;
 
   public ClassFormat() {
     this.constantPoolList = new ArrayList<ConstantPoolElement>();
@@ -36,7 +38,19 @@ class ClassFormat {
     System.out.println("this_class: " + this.this_class);
     System.out.println("super_class: " + this.super_class);
     System.out.println("interface_count: " + this.interface_count);
-    System.out.println("field_count: " + field_count);
-    System.out.println("method_count: " + method_count);
+    System.out.println("field_count: " + fields_count);
+    System.out.println("method_count: " + methods_count);
+
+    for (int i = 0; i < this.methods.size(); i++) {
+      Method_info method_info = methods.get(i);
+      method_info.printOut();
+    }
+    System.out.println("attributes_count: " + attributes_count);
+
+    for (int i = 0; i < this.attributes.size(); i++) {
+      Attribute_info attr_info = this.attributes.get(i);
+      attr_info.printOut();
+    }
+
   }
 }
