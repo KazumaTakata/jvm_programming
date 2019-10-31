@@ -4,10 +4,12 @@ import java.util.ArrayList;
 class Parser {
   private ByteHolder bhold;
   private ArrayList<ConstantPoolElement> constantPoolList;
+  public ClassFormat CFormat;
 
   public Parser(ByteHolder _bhold) {
     bhold = _bhold;
     constantPoolList = new ArrayList<ConstantPoolElement>();
+    this.CFormat = new ClassFormat();
   }
 
   public void parse_magic() {
@@ -43,17 +45,16 @@ class Parser {
   }
 
   public void parse_version() {
-    byte mi_ver1 = bhold.getCurByte();
-    byte mi_ver2 = bhold.getCurByte();
-    byte maj_ver1 = bhold.getCurByte();
-    byte maj_ver2 = bhold.getCurByte();
+    int mi_ver = get_Unsigned_twoByte();
+    int maj_ver = get_Unsigned_twoByte();
 
-    System.out.println("magor_version: " + Byte.toString(maj_ver2));
-    System.out.println("minor_version:" + Byte.toString(mi_ver2));
+    this.CFormat.minor_version = mi_ver;
+    this.CFormat.major_version = maj_ver;
   }
 
   public void parse_accessFlag() {
     ArrayList<Access_Flags> flags = new ArrayList<Access_Flags>();
+    this.CFormat.flags = flags;
     int flag = get_Unsigned_twoByte();
     int flag1 = flag % 16;
 
@@ -84,28 +85,25 @@ class Parser {
     } else if (flag4 == 4) {
       flags.add(Access_Flags.ACC_ENUM);
     }
-
-    System.out.println(flags);
   }
 
   public void parse_class() {
     int this_class = get_Unsigned_twoByte();
-    System.out.println("this_class: " + this_class);
     int super_class = get_Unsigned_twoByte();
-    System.out.println("super_class: " + super_class);
     int interface_count = get_Unsigned_twoByte();
-    System.out.println("interface_count: " + interface_count);
+    this.CFormat.this_class = this_class;
+    this.CFormat.super_class = super_class;
+    this.CFormat.interface_count = interface_count;
 
     if (interface_count > 0) {}
 
     int field_count = get_Unsigned_twoByte();
-    System.out.println("field_count: " + field_count);
-
+    this.CFormat.fields_count = field_count;
     if (field_count > 0) {}
 
     int method_count = get_Unsigned_twoByte();
-    System.out.println("method_count: " + method_count);
-
+    this.CFormat.methods_count = method_count;
+    this.CFormat.printOut();
     parse_method(method_count);
 
     int class_attr_count = get_Unsigned_twoByte();
@@ -246,23 +244,19 @@ class Parser {
 
   public void parse_constantPool() {
     int constant_size = get_Unsigned_twoByte() - 1;
-    System.out.println("constant pool size: " + constant_size);
-
-    // constant_size = 7;
+    this.CFormat.constant_pool_count = constant_size;
     for (int i = 0; i < constant_size; i++) {
       int curByte = 0xFF & bhold.getCurByte();
-
-      System.out.print("#" + (i + 1) + " ");
-
+      ConstantPoolElement ele;
       switch (curByte) {
         case 0x0a:
           {
             int class_index = get_Unsigned_twoByte();
             int name_and_type_index = get_Unsigned_twoByte();
             int[] values = {class_index, name_and_type_index};
-            ConstantPoolElement ele = new ConstantPoolElement(PoolTag.CONSTANT_METHODREF, values);
-            ele.PrintOut();
+            ele = new ConstantPoolElement(PoolTag.CONSTANT_METHODREF, values);
             this.constantPoolList.add(ele);
+
             break;
           }
         case 0x09:
@@ -270,8 +264,7 @@ class Parser {
             int class_index = get_Unsigned_twoByte();
             int name_and_type_index = get_Unsigned_twoByte();
             int[] values = {class_index, name_and_type_index};
-            ConstantPoolElement ele = new ConstantPoolElement(PoolTag.CONSTANT_FIELDREF, values);
-            ele.PrintOut();
+            ele = new ConstantPoolElement(PoolTag.CONSTANT_FIELDREF, values);
             this.constantPoolList.add(ele);
 
             break;
@@ -280,8 +273,7 @@ class Parser {
           {
             int string_index = get_Unsigned_twoByte();
             int[] values = {string_index};
-            ConstantPoolElement ele = new ConstantPoolElement(PoolTag.CONSTANT_STRING, values);
-            ele.PrintOut();
+            ele = new ConstantPoolElement(PoolTag.CONSTANT_STRING, values);
             this.constantPoolList.add(ele);
 
             break;
@@ -290,8 +282,7 @@ class Parser {
           {
             int name_index = get_Unsigned_twoByte();
             int[] values = {name_index};
-            ConstantPoolElement ele = new ConstantPoolElement(PoolTag.CONSTANT_CLASS, values);
-            ele.PrintOut();
+            ele = new ConstantPoolElement(PoolTag.CONSTANT_CLASS, values);
             this.constantPoolList.add(ele);
 
             break;
@@ -301,8 +292,7 @@ class Parser {
             int length = get_Unsigned_twoByte();
             byte[] bytes = bhold.getNByte(length);
             String s = new String(bytes, StandardCharsets.UTF_8);
-            ConstantPoolElement ele = new ConstantPoolElement(PoolTag.CONSTANT_UTF8, null, s);
-            ele.PrintOut();
+            ele = new ConstantPoolElement(PoolTag.CONSTANT_UTF8, null, s);
             this.constantPoolList.add(ele);
 
             break;
@@ -312,13 +302,13 @@ class Parser {
             int name_index = get_Unsigned_twoByte();
             int descriptor_index = get_Unsigned_twoByte();
             int[] values = {name_index, descriptor_index};
-            ConstantPoolElement ele = new ConstantPoolElement(PoolTag.CONSTANT_NAMEANDTYPE, values);
-            ele.PrintOut();
+            ele = new ConstantPoolElement(PoolTag.CONSTANT_NAMEANDTYPE, values);
             this.constantPoolList.add(ele);
 
             break;
           }
       }
     }
+    this.CFormat.constantPoolList = this.constantPoolList;
   }
 }

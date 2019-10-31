@@ -33,7 +33,7 @@ class ConstantPoolElement {
     this.string = string;
   }
 
-  public void PrintOut() {
+  public void printOut() {
     System.out.print("tag: " + this.tag.name());
     if (this.values != null) {
 
